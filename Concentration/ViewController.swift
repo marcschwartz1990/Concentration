@@ -18,8 +18,6 @@ class ViewController: UIViewController {
     @IBOutlet var cardButtons: [UIButton]!
     
     @IBAction func touchCard(_ sender: UIButton) {
-        game.flipCount += 1
-        
         if let cardNumber = cardButtons.firstIndex(of: sender) {
             game.chooseCard(at: cardNumber)
             updateViewFromModel()
