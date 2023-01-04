@@ -9,15 +9,23 @@ import UIKit
 
 class ViewController: UIViewController {
     
-    lazy var game = Concentration(numberOfPairsOfCards: (cardButtons.count + 1) / 2, theme: ThemeChoice.allCases.randomElement()!)
+    private lazy var game = Concentration(numberOfPairsOfCards: numberOfPairsOfCards)
+    
+    var numberOfPairsOfCards: Int {
+        return (cardButtons.count + 1) / 2
+    }
+    
+//    private var theme: ThemeChoice {
+//        ThemeChoice.allCases.randomElement()!
+//    }
 //    var game is the "green arrow" to the model. Through this var, I can interact with the Model's public API.
 
-    @IBOutlet weak var scoreLabel: UILabel!
-    @IBOutlet weak var flipCountLabel: UILabel!
+    @IBOutlet private weak var scoreLabel: UILabel!
+    @IBOutlet private weak var flipCountLabel: UILabel!
     
-    @IBOutlet var cardButtons: [UIButton]!
+    @IBOutlet private var cardButtons: [UIButton]!
     
-    @IBAction func touchCard(_ sender: UIButton) {
+    @IBAction private func touchCard(_ sender: UIButton) {
         if let cardNumber = cardButtons.firstIndex(of: sender) {
             game.chooseCard(at: cardNumber)
             updateViewFromModel()
@@ -26,9 +34,9 @@ class ViewController: UIViewController {
         }
     }
     
-    @IBAction func newGame(_ sender: UIButton) {
+    @IBAction private func newGame(_ sender: UIButton) {
         // Create new Concentration model and refresh View.
-        self.game = Concentration(numberOfPairsOfCards: (cardButtons.count + 1) / 2, theme: ThemeChoice.allCases.randomElement()!)
+        self.game = Concentration(numberOfPairsOfCards: numberOfPairsOfCards)
         updateViewFromModel()
         // Reset emojiChoices and emoji vars
         emojiChoices = game.theme.chosenTheme.content
@@ -36,7 +44,7 @@ class ViewController: UIViewController {
         
     }
     
-    func updateViewFromModel() {
+    private func updateViewFromModel() {
         view.backgroundColor = game.theme.chosenTheme.backGroundColor
         for index in cardButtons.indices {
             let button = cardButtons[index]
@@ -57,11 +65,11 @@ class ViewController: UIViewController {
     
     // emoji
     
-    lazy var emojiChoices = game.theme.chosenTheme.content
+    private lazy var emojiChoices = game.theme.chosenTheme.content
     
-    var emoji = [Int:String]()
+    private var emoji = [Int:String]()
     
-    func emoji(for card: Card) -> String {
+    private func emoji(for card: Card) -> String {
         if emoji[card.identifier] == nil {
             if emojiChoices.count > 0 {
                 let randomIndex = Int(arc4random_uniform(UInt32(emojiChoices.count)))

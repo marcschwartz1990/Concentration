@@ -8,14 +8,33 @@
 import Foundation
 
 class Concentration {
-    var cards = [Card]()
-    var theme: ThemeChoice
+    private(set) var cards = [Card]()
+    var theme = ThemeChoice.allCases.randomElement()!
     var score = 0
-    var seenCardIndicies = [Int]()
-    var indexOfOneAndOnlyFaceUpCard: Int?
+    private var seenCardIndicies = [Int]()
+    private var indexOfOneAndOnlyFaceUpCard: Int? {
+        get {
+            var foundIndex: Int?
+            for index in cards.indices {
+                if cards[index].isFaceUp {
+                    if foundIndex == nil {
+                        foundIndex = index
+                    } else {
+                        return nil
+                    }
+                }
+            }
+            return foundIndex
+        }
+        set(newValue) {
+            for index in cards.indices {
+                cards[index].isFaceUp = (index == newValue)
+            }
+        }
+    }
     var flipCount = 0
-    var timeFirstCardPressed: Date?
-    var timeSecondCardPressed: Date?
+    private var timeFirstCardPressed: Date?
+    private var timeSecondCardPressed: Date?
     
     // TODO: Refactor chooseCard to smaller functions.
     // TODO: When card that is already faceup is tapped, nothing should happen.
@@ -43,7 +62,6 @@ class Concentration {
                     }
                 }
                 cards[index].isFaceUp = true
-                indexOfOneAndOnlyFaceUpCard = nil
                 
             } else {
                 if timeFirstCardPressed != nil && timeSecondCardPressed != nil {
@@ -51,11 +69,7 @@ class Concentration {
                     timeSecondCardPressed = nil
                 }
                 // either no cards or 2 cards are face up
-                for flipDownIndex in cards.indices {
-                    cards[flipDownIndex].isFaceUp = false
-                }
                 timeFirstCardPressed = Date.now
-                cards[index].isFaceUp = true
                 indexOfOneAndOnlyFaceUpCard = index
             }
             flipCount += 1
@@ -75,12 +89,11 @@ class Concentration {
         }
     }
     
-    init(numberOfPairsOfCards: Int, theme: ThemeChoice) {
+    init(numberOfPairsOfCards: Int) {
         for _ in 1...numberOfPairsOfCards {
             let card = Card()
             cards += [card, card]
         }
         cards.shuffle()
-        self.theme = theme
     }
 }
