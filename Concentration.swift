@@ -40,6 +40,7 @@ class Concentration {
     // TODO: When card that is already faceup is tapped, nothing should happen.
     
     func chooseCard(at index: Int) {
+        assert(cards.indices.contains(index), "Concentration.chooseCard(at: \(index)): chosen index not in the cards")
         var isNewCard = false
         // add card index to seenCardIndicies
         if !seenCardIndicies.contains(index) {
@@ -90,6 +91,7 @@ class Concentration {
     }
     
     init(numberOfPairsOfCards: Int) {
+        assert(numberOfPairsOfCards > 0, "Concentration.init(\(numberOfPairsOfCards)): you must have at least one pair of cards")
         for _ in 1...numberOfPairsOfCards {
             let card = Card()
             cards += [card, card]
