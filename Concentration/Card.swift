@@ -7,11 +7,19 @@
 
 import Foundation
 
-struct Card: Equatable {
+struct Card: Hashable, Equatable {
 //    The card is UI independent. Information about what is on the card is not necessary.
+    static func ==(lhs: Card, rhs: Card) -> Bool {
+        return lhs.identifier == rhs.identifier
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(self.identifier)
+    }
+    
     var isFaceUp = false
     var isMatched = false
-    var identifier: Int
+    private var identifier: Int
     
     private static var identifierFactory = 0
     

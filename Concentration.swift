@@ -7,7 +7,7 @@
 
 import Foundation
 
-class Concentration {
+struct Concentration {
     private(set) var cards = [Card]()
     var theme = ThemeChoice.allCases.randomElement()!
     var score = 0
@@ -39,7 +39,7 @@ class Concentration {
     // TODO: Refactor chooseCard to smaller functions.
     // TODO: When card that is already faceup is tapped, nothing should happen.
     
-    func chooseCard(at index: Int) {
+    mutating func chooseCard(at index: Int) {
         assert(cards.indices.contains(index), "Concentration.chooseCard(at: \(index)): chosen index not in the cards")
         var isNewCard = false
         // add card index to seenCardIndicies
@@ -51,7 +51,7 @@ class Concentration {
         if !cards[index].isMatched && !cards[index].isFaceUp {
             if let matchIndex = indexOfOneAndOnlyFaceUpCard, matchIndex != index {
                 // check if cards match (one card is up and the chosen card is compared to it)
-                if cards[matchIndex].identifier == cards[index].identifier {
+                if cards[matchIndex] == cards[index] {
                     cards[matchIndex].isMatched = true
                     cards[index].isMatched = true
                     score += 2
@@ -77,7 +77,7 @@ class Concentration {
         }
     }
     
-    private func addTimeBonus() {
+    mutating private func addTimeBonus() {
         if timeFirstCardPressed != nil && timeSecondCardPressed != nil {
             let timeDifference = timeFirstCardPressed!.distance(to: timeSecondCardPressed!)
             if timeDifference > 2 && timeDifference < 3 {
